@@ -17,7 +17,7 @@ int main()
         case STATE_AUTH:
         {
             printf("\nWelcome to the Student Management System for KUET\n");
-            printf("-------------------------------------------------\n");
+            printf("---------------------------------------------------\n");
             bool isAuthenticated = auth();
             if (isAuthenticated)
                 state = STATE_MAIN_MENU;

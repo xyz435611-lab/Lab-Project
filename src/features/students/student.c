@@ -112,10 +112,10 @@ AppState manageStudents()
     }
 
     Student student;
-    int choice;
-
+    
     while (1)
     {
+        int choice;
         printf("\nManage Students\n");
         printf("---------------\n");
         printf("1. Add Student\n");
@@ -146,12 +146,13 @@ AppState manageStudents()
         }
         case 4:
         {
+            return STATE_MAIN_MENU;
             break;
         }
         case 5:
         {
             fclose(fp);
-            return STATE_MAIN_MENU;
+            return STATE_AUTH;
         }
         default:
         {

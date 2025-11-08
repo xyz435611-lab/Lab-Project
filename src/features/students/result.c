@@ -23,6 +23,8 @@ AppState manageResults()
         printf("1. CT\n");
         printf("2. Term\n");
         printf("3. Overall\n");
+        printf("4. Go Back\n");
+        printf("5. Return to main menu\n");
 
         printf("Enter your choice: ");
         scanf("%d", &choice);
@@ -50,6 +52,7 @@ AppState manageResults()
         }
         case 4:
         {
+            return STATE_RESULT_MENU;
             break;
         }
         case 5:
