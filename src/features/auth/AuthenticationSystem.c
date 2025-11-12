@@ -3,16 +3,8 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <stdlib.h>
-#include "auth/Authentication System.h"
-
-#ifdef _WIN32
-#include <direct.h>
-#define MKDIR(path, mode) _mkdir(path)
-#else
-#include <sys/stat.h>
-#include <sys/types.h>
-#define MKDIR(path, mode) mkdir((path), (mode))
-#endif
+#include "auth/AuthenticationSystem.h"
+#include "globals.h"
 
 User user;
 
