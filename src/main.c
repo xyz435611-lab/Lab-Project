@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "students/student.h"
 #include "students/result.h"
-#include "auth/Authentication System.h"
+#include "auth/AuthenticationSystem.h"
 #include "menu/menu.h"
 
 int main()

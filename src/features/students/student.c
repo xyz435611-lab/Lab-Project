@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <errno.h>
 
 #include "students/student.h"
 #include "menu/menu.h"
+#include "globals.h"
 
-void addStudent(FILE *fp, Student *student)
+void addStudent(Student *student)
 {
     printf("\nAdd Student\n");
     printf("-------------\n");
@@ -18,6 +20,12 @@ void addStudent(FILE *fp, Student *student)
     printf("Enter Student Roll: ");
     scanf("%u", &roll);
     getchar();
+
+    FILE *fp = fopen("data/students/students.txt", "a+");
+    if (fp == NULL)
+    {
+        perror("Failed to open students.txt");
+    }
 
     bool found = false;
     while (fscanf(fp, "\n%99[^0-9] %u", student->name, &student->roll) == 2 && fp != NULL)
@@ -33,12 +41,14 @@ void addStudent(FILE *fp, Student *student)
     }
     if (!found)
     {
-        fprintf(fp, "%s %u\n", student->name, student->roll);
+        fprintf(fp, "%s %u\n", name, roll);
         printf("Student added successfully!\n");
     }
+
+    fclose(fp);
 }
 
-void displayStudent(FILE *fp, Student *student)
+void displayStudent(Student *student)
 {
     printf("\nDisplay Student\n");
     printf("-------------\n");
@@ -46,7 +56,11 @@ void displayStudent(FILE *fp, Student *student)
     unsigned int roll;
     scanf("%u", &roll);
     getchar();
-    rewind(fp);
+    FILE *fp = fopen("data/students/students.txt", "r");
+    if (fp == NULL)
+    {
+        perror("Failed to open students.txt");
+    }
 
     bool found = false;
     while (fscanf(fp, "\n%99[^0-9] %u", student->name, &student->roll) == 2 && fp != NULL)
@@ -64,17 +78,22 @@ void displayStudent(FILE *fp, Student *student)
     {
         printf("No student was found!\n");
     }
+    fclose(fp);
 }
 
-void deleteStudent(FILE *fp, Student *student)
+void deleteStudent(Student *student)
 {
     printf("\nDelete Student\n");
     printf("-------------\n");
     printf("Enter student roll: ");
     unsigned int roll;
     scanf("%u", &roll);
-    rewind(fp);
-    FILE *fp2 = fopen("temp.txt", "a+");
+    FILE *fp = fopen("data/students/students.txt", "a+");
+    if (fp == NULL)
+    {
+        perror("Failed to open students.txt");
+    }
+    FILE *fp2 = fopen("data/students/temp.txt", "w");
 
     bool found = false;
     while (fscanf(fp, "\n%99[^0-9] %u", student->name, &student->roll) == 2 && fp != NULL)
@@ -88,7 +107,9 @@ void deleteStudent(FILE *fp, Student *student)
             found = true;
         }
     }
-    if (remove("students.txt") != 0 || rename("temp.txt", "students.txt") != 0)
+    fclose(fp2);
+    fclose(fp);
+    if (remove("data/students/students.txt") != 0 || rename("data/students/temp.txt", "data/students/students.txt") != 0)
     {
         printf("Failed to delete Student\n");
     }
@@ -104,13 +125,6 @@ void deleteStudent(FILE *fp, Student *student)
 
 AppState manageStudents()
 {
-    FILE *fp = fopen("students.txt", "a+");
-    if (fp == NULL)
-    {
-        perror("Failed to open students.txt");
-        return STATE_MAIN_MENU;
-    }
-
     Student student;
     
     while (1)
@@ -127,21 +141,37 @@ AppState manageStudents()
         scanf("%d", &choice);
         getchar();
 
+        int status;
+
+        status = MKDIR("data", 0777);
+        if (status == -1 && errno != EEXIST)
+        {
+            perror("Accessing data failed");
+            return STATE_MAIN_MENU;
+        }
+
+        status = MKDIR("data/students", 0777);
+        if (status == -1 && errno != EEXIST)
+        {
+            perror("Accessing data/students failed");
+            return STATE_MAIN_MENU;
+        }
+
         switch (choice)
         {
         case 1:
         {
-            addStudent(fp, &student);
+            addStudent(&student);
             break;
         }
         case 2:
         {
-            displayStudent(fp, &student);
+            displayStudent(&student);
             break;
         }
         case 3:
         {
-            deleteStudent(fp, &student);
+            deleteStudent(&student);
             break;
         }
         case 4:
@@ -151,7 +181,6 @@ AppState manageStudents()
         }
         case 5:
         {
-            fclose(fp);
             return STATE_AUTH;
         }
         default:
@@ -161,6 +190,4 @@ AppState manageStudents()
         }
         }
     }
-
-    fclose(fp);
 }

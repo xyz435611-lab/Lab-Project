@@ -10,9 +10,9 @@ typedef struct
     unsigned int roll;
 } Student;
 
-void addStudent(FILE *fp, Student *student);
-void displayStudent(FILE *fp, Student *student);
-void deleteStudent(FILE *fp, Student *student);
+void addStudent(Student *student);
+void displayStudent(Student *student);
+void deleteStudent(Student *student);
 AppState manageStudents();
 
 #endif // STUDENT_H
