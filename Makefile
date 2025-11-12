@@ -87,10 +87,10 @@ $(TARGET): $(OBJS)
 # Clean target to remove generated files
 clean:
 	@echo "Cleaning up..."
-	# Use 'find' and 'xargs rm' for Unix/Linux/WSL compatibility
-	rm -f $(OBJS) $(TARGET)
-	# Original Windows/DOS command for clean target
-	#-del /Q $(subst /,\,$(OBJS)) $(TARGET) $(TARGET).exe 2>NULL
+# Use 'find' and 'xargs rm' for Unix/Linux/WSL compatibility
+#rm -f $(OBJS) $(TARGET)
+# Original Windows/DOS command for clean target
+	-del /Q $(subst /,\,$(OBJS)) $(TARGET) $(TARGET).exe 2>NULL
 # Phony targets (targets that aren't actual files)
 >>>>>>> f0fad5a5b45e146e47a56aeb1dc8dc9f2c1816aa
 .PHONY: all clean
