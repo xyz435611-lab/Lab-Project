@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <menu/menu.h>
 #include <errno.h>
-
+#include <string.h>
 #include "globals.h"
 
 AppState manageResults()
